@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, usePathname, useSegments, useRouter } from 'expo-router';
+import { Stack, useSegments, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { AppProvider, useAuth } from '@/hooks/AppContext';
-import { DrizzleStudioDevTool } from '@/database/DrizzleStudio';
+import { useColorScheme } from '@/core/hooks/useColorScheme';
+import { AppProvider, useAuth } from '@/core/providers/AppContext';
+import { DrizzleStudioDevTool } from '@/core/database/DrizzleStudio';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,9 +18,9 @@ function useProtectedRoute(isLoggedIn: boolean, loading: boolean) {
 
   useEffect(() => {
     if (loading) return; // Don't redirect during loading
-    
+
     const inAuthGroup = segments[0] === 'login';
-    
+
     if (!isLoggedIn && !inAuthGroup) {
       // Redirect to the login page if not logged in
       router.replace('/login');
@@ -41,13 +41,13 @@ function RootLayoutNav() {
     <>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen 
-          name="login" 
-          options={{ headerShown: false, gestureEnabled: false }} 
+        <Stack.Screen
+          name="login"
+          options={{ headerShown: false, gestureEnabled: false }}
         />
-        <Stack.Screen 
-          name="ChatRoom" 
-          options={{ headerShown: true }} 
+        <Stack.Screen
+          name="ChatRoom"
+          options={{ headerShown: true }}
         />
         <Stack.Screen name="+not-found" />
       </Stack>

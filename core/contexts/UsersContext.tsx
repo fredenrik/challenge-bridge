@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useUser, User } from '@/hooks/useUser';
+import { useUser, User } from '@/core/hooks/useUser';
 
 type UsersContextType = {
   users: User[];

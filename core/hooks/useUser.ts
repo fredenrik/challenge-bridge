@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { userService } from '@/database/services';
+import { userService } from '@/core/database/services';
 import { User } from '@/types/entities';
 
 export { User };
@@ -25,14 +25,14 @@ export function useUser() {
         setLoading(false);
       }
     };
-    
+
     loadUsers();
   }, []);
-  
+
   const login = useCallback(async (userId: string): Promise<boolean> => {
     try {
       const user = await userService.authenticateUser(userId);
-      
+
       if (user) {
         setCurrentUser(user);
         return true;

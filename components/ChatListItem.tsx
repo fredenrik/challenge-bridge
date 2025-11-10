@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Chat } from '@/hooks/useChats';
+import { Chat } from '@/core/hooks/useChats';
 import { Avatar } from './Avatar';
 import { ThemedText } from './ThemedText';
-import { User } from '@/hooks/useUser';
+import { User } from '@/core/hooks/useUser';
 
 interface ChatListItemProps {
   chat: Chat;
@@ -14,7 +14,7 @@ interface ChatListItemProps {
 
 export function ChatListItem({ chat, currentUserId, users }: ChatListItemProps) {
   const navigation = useNavigation();
-  
+
   const otherParticipants = useMemo(() => {
     return chat.participants
       .filter(id => id !== currentUserId)
@@ -38,11 +38,11 @@ export function ChatListItem({ chat, currentUserId, users }: ChatListItemProps) 
 
   const timeString = useMemo(() => {
     if (!chat.lastMessage) return '';
-    
+
     const date = new Date(chat.lastMessage.timestamp);
     const now = new Date();
     const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     if (diffInDays === 0) {
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     } else if (diffInDays === 1) {
@@ -58,8 +58,8 @@ export function ChatListItem({ chat, currentUserId, users }: ChatListItemProps) 
 
   return (
     <Pressable style={styles.container} onPress={handlePress}>
-      <Avatar 
-        user={otherParticipants[0]} 
+      <Avatar
+        user={otherParticipants[0]}
         size={50}
       />
       <View style={styles.contentContainer}>
@@ -73,7 +73,7 @@ export function ChatListItem({ chat, currentUserId, users }: ChatListItemProps) 
         </View>
         <View style={styles.bottomRow}>
           {chat.lastMessage && (
-            <ThemedText 
+            <ThemedText
               numberOfLines={1}
               style={[
                 styles.lastMessage,
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   currentUserMessage: {
     fontStyle: 'italic',
   },
-}); 
+});
