@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useAppContext } from '@/hooks/AppContext';
+import { useAuth, useUsers, useChatsContext } from '@/hooks/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { MessageBubble } from '@/components/MessageBubble';
@@ -19,7 +19,9 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function ChatRoomScreen() {
   const { chatId } = useLocalSearchParams<{ chatId: string }>();
-  const { currentUser, users, chats, sendMessage } = useAppContext();
+  const { currentUser } = useAuth();
+  const { users } = useUsers();
+  const { chats, sendMessage } = useChatsContext();
   const [messageText, setMessageText] = useState('');
   const flatListRef = useRef<FlatList>(null);
   const router = useRouter();

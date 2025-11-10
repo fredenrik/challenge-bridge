@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, Pressable, Modal } from 'react-native';
-import { useAppContext } from '@/hooks/AppContext';
+import { useAuth, useUsers, useChatsContext } from '@/hooks/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ChatListItem } from '@/components/ChatListItem';
@@ -8,7 +8,9 @@ import { UserListItem } from '@/components/UserListItem';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function ChatsScreen() {
-  const { currentUser, users, chats, createChat } = useAppContext();
+  const { currentUser } = useAuth();
+  const { users } = useUsers();
+  const { chats, createChat } = useChatsContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 

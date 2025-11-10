@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, Pressable, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAppContext } from '@/hooks/AppContext';
+import { useAuth } from '@/hooks/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Avatar } from '@/components/Avatar';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function ProfileScreen() {
-  const { currentUser, logout } = useAppContext();
+  const { currentUser, logout } = useAuth();
   const router = useRouter();
 
   const handleLogout = () => {

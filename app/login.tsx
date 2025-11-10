@@ -2,18 +2,24 @@ import React from 'react';
 import { StyleSheet, FlatList, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useAppContext } from '@/hooks/AppContext';
+import { useAuth, useUsers } from '@/hooks/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { UserListItem } from '@/components/UserListItem';
 
 export default function LoginScreen() {
-  const { users, login } = useAppContext();
+  const { login } = useAuth();
+  const { users } = useUsers();
   const router = useRouter();
 
-  const handleUserSelect = (userId: string) => {
-    if (login(userId)) {
-      router.replace('/(tabs)');
+  const handleUserSelect = async (userId: string) => {
+    try {
+      const success = await login(userId);
+      if (success) {
+        router.replace('/(tabs)');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
     }
   };
 
@@ -27,7 +33,7 @@ export default function LoginScreen() {
             Select a user to continue
           </ThemedText>
         </ThemedView>
-        
+
         <FlatList
           data={users}
           keyExtractor={(item) => item.id}
@@ -65,4 +71,4 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingBottom: 20,
   },
-}); 
+});

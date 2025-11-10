@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { AppProvider, useAppContext } from '@/hooks/AppContext';
+import { AppProvider, useAuth } from '@/hooks/AppContext';
 import { DrizzleStudioDevTool } from '@/database/DrizzleStudio';
 
 SplashScreen.preventAutoHideAsync();
@@ -32,7 +32,7 @@ function useProtectedRoute(isLoggedIn: boolean, loading: boolean) {
 }
 
 function RootLayoutNav() {
-  const { isLoggedIn, loading } = useAppContext();
+  const { isLoggedIn, loading } = useAuth();
 
   // Call the hook unconditionally
   useProtectedRoute(isLoggedIn, loading);
