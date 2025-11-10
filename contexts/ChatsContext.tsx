@@ -1,11 +1,17 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useChats, Chat } from '../useChats';
+import { useChats, Chat } from '@/hooks/useChats';
 import { useAuth } from './AuthContext';
+import {MessageType} from '@/types/entities';
 
 type ChatsContextType = {
   chats: Chat[];
   createChat: (participantIds: string[]) => Promise<Chat | null>;
-  sendMessage: (chatId: string, text: string, senderId: string) => Promise<boolean>;
+  sendMessage: (chatId: string, text: string, senderId: string, options?: {
+    type?: MessageType;
+    mediaUri?: string;
+    thumbnailUri?: string;
+    mediaSize?: number;
+  }) => Promise<boolean>;
   loading: boolean;
 };
 

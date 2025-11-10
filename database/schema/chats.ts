@@ -16,4 +16,8 @@ export const messages = sqliteTable("messages", {
   senderId: text("sender_id").notNull(),
   text: text("text").notNull(),
   timestamp: integer("timestamp").notNull(),
-}); 
+  type: text("type").default("text"), // 'text' | 'image'
+  mediaUri: text("media_uri"), // Full resolution image URI/base64
+  thumbnailUri: text("thumbnail_uri"), // Compressed thumbnail
+  mediaSize: integer("media_size"), // Size in bytes
+});

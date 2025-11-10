@@ -7,7 +7,10 @@
       "@/app/*": ["./app/*"],
       "@/components/*": ["./components/*"],
       "@/hooks/*": ["./hooks/*"],
-      "@/drizzle/*": ["./drizzle/*"]
+      "@/types/*": ["./types/*"],
+      "@/utils/*": ["./utils/*"],
+      "@/drizzle/*": ["./drizzle/*"],
+      "@/contexts/*": ["./contexts/*"],
     }
   },
   "include": [

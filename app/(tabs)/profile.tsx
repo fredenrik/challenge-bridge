@@ -1,19 +1,49 @@
-import React from 'react';
-import { StyleSheet, Pressable, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Pressable, SafeAreaView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/hooks/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Avatar } from '@/components/Avatar';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { resetDatabase } from '@/database/resetDatabase';
+import { seedDatabase } from '@/database/seed';
 
 export default function ProfileScreen() {
   const { currentUser, logout } = useAuth();
   const router = useRouter();
+  const [resetting, setResetting] = useState(false);
 
   const handleLogout = () => {
     logout();
     // The navigation to login will be handled by the useProtectedRoute hook in _layout.tsx
+  };
+
+  const handleResetDatabase = () => {
+    Alert.alert(
+      'Reset Database',
+      'This will delete all chats and messages. Continue?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Reset',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setResetting(true);
+              await resetDatabase();
+              await seedDatabase();
+              Alert.alert('Success', 'Database reset complete. Please restart the app.');
+            } catch (error) {
+              console.error('Reset error:', error);
+              Alert.alert('Error', 'Failed to reset database');
+            } finally {
+              setResetting(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
   if (!currentUser) {
@@ -52,6 +82,17 @@ export default function ProfileScreen() {
         </ThemedView>
         
         <ThemedView style={styles.buttonContainer}>
+          <Pressable 
+            style={styles.resetButton} 
+            onPress={handleResetDatabase}
+            disabled={resetting}
+          >
+            <IconSymbol name="arrow.clockwise" size={20} color="#FF9500" />
+            <ThemedText style={styles.resetText}>
+              {resetting ? 'Resetting...' : 'Reset Database (Dev)'}
+            </ThemedText>
+          </Pressable>
+          
           <Pressable style={styles.logoutButton} onPress={handleLogout}>
             <IconSymbol name="arrow.right.square" size={20} color="#FFFFFF" />
             <ThemedText style={styles.logoutText}>Log Out</ThemedText>
@@ -106,6 +147,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     marginBottom: 80, // Add padding to ensure the button is visible above the tab bar
+  },
+  resetButton: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF3E0',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 20,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#FF9500',
+  },
+  resetText: {
+    color: '#FF9500',
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
   logoutButton: {
     flexDirection: 'row',

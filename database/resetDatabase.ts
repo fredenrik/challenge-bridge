@@ -1,16 +1,20 @@
-import { drizzle } from 'drizzle-orm/expo-sqlite';
 import * as SQLite from 'expo-sqlite';
-import * as schema from './schema';
 
-// Open a database connection using the correct async API from Expo SQLite
-const sqlite = SQLite.openDatabaseSync('chat-app.db');
-
-// Create the Drizzle client
-export const db = drizzle(sqlite, { schema });
-
-// Initialize function to create tables if they don't exist
-export async function initializeDatabase() {
+/**
+ * Drops all tables and recreates them with the new schema
+ * USE WITH CAUTION: This will delete all data
+ */
+export async function resetDatabase() {
+  const sqlite = SQLite.openDatabaseSync('chat-app.db');
+  
   try {
+    console.log('Dropping existing tables...');
+    
+    await sqlite.execAsync('DROP TABLE IF EXISTS messages;');
+    await sqlite.execAsync('DROP TABLE IF EXISTS chat_participants;');
+    await sqlite.execAsync('DROP TABLE IF EXISTS chats;');
+    await sqlite.execAsync('DROP TABLE IF EXISTS users;');
+    
     console.log('Creating users table...');
     await sqlite.execAsync(`
       CREATE TABLE IF NOT EXISTS users (
@@ -38,7 +42,7 @@ export async function initializeDatabase() {
       );
     `);
     
-    console.log('Creating messages table...');
+    console.log('Creating messages table with media support...');
     await sqlite.execAsync(`
       CREATE TABLE IF NOT EXISTS messages (
         id TEXT PRIMARY KEY,
@@ -54,9 +58,10 @@ export async function initializeDatabase() {
       );
     `);
     
-    console.log('All tables created successfully!');
+    console.log('Database reset successfully!');
+    return true;
   } catch (error) {
-    console.error('Error initializing database:', error);
+    console.error('Error resetting database:', error);
     throw error;
   }
-} 
+}

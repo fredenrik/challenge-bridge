@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { chatService } from '@/database/services';
-import { Chat, Message } from '@/types/entities';
+import { Chat, Message, MessageType } from '@/types/entities';
 
 export { Chat, Message };
 
@@ -53,9 +53,19 @@ export function useChats(currentUserId: string | null) {
     }
   }, [currentUserId]);
 
-  const sendMessage = useCallback(async (chatId: string, text: string, senderId: string): Promise<boolean> => {
+  const sendMessage = useCallback(async (
+    chatId: string,
+    text: string,
+    senderId: string,
+    options?: {
+      type?: MessageType;
+      mediaUri?: string;
+      thumbnailUri?: string;
+      mediaSize?: number;
+    }
+  ): Promise<boolean> => {
     try {
-      const newMessage = await chatService.sendMessage(chatId, senderId, text);
+      const newMessage = await chatService.sendMessage(chatId, senderId, text, options);
       
       if (!newMessage) {
         return false;

@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext, ReactNode } from
 import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { initializeDatabase } from './db';
 import { seedDatabase } from './seed';
+import { resetDatabase } from './resetDatabase';
 
 interface DatabaseContextType {
   isInitialized: boolean;
@@ -30,9 +31,21 @@ export function DatabaseProvider({ children }: DatabaseProviderProps) {
     async function setupDatabase() {
       try {
         console.log('Initializing database...');
-        // Initialize the database schema
-        await initializeDatabase();
-        console.log('Database initialized');
+        
+        // Try to initialize normally first
+        try {
+          await initializeDatabase();
+          console.log('Database initialized');
+        } catch (initError: any) {
+          // If there's a schema error, reset the database
+          if (initError?.message?.includes('has no column') || initError?.message?.includes('no such column')) {
+            console.warn('Schema mismatch detected, resetting database...');
+            await resetDatabase();
+            console.log('Database reset complete');
+          } else {
+            throw initError;
+          }
+        }
         
         // Seed the database with initial data
         await seedDatabase();

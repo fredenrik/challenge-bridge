@@ -1,5 +1,6 @@
 import { chatRepository } from '../repositories';
-import { Chat, Message } from '@/types/entities';
+import { Chat, Message, MessageType } from '@/types/entities';
+import { PaginatedResult, PaginationOptions } from '@/types/Pagination';
 
 /**
  * Service layer for Chat business logic
@@ -33,18 +34,59 @@ export class ChatService {
     return await chatRepository.createChat(participantIds);
   }
 
-  async sendMessage(chatId: string, senderId: string, text: string): Promise<Message | null> {
-    const trimmedText = text.trim();
-    if (!trimmedText) {
-      console.warn('Cannot send empty message');
-      return null;
+  async sendMessage(
+    chatId: string,
+    senderId: string,
+    text: string,
+    options?: {
+      type?: MessageType;
+      mediaUri?: string;
+      thumbnailUri?: string;
+      mediaSize?: number;
+    }
+  ): Promise<Message | null> {
+    // For text messages, validate text
+    if (options?.type !== 'image') {
+      const trimmedText = text.trim();
+      if (!trimmedText) {
+        console.warn('Cannot send empty message');
+        return null;
+      }
     }
 
-    return await chatRepository.createMessage(chatId, senderId, trimmedText);
+    return await chatRepository.createMessage(chatId, senderId, text, options);
   }
 
+  /**
+   * @deprecated Use getChatMessagesPaginated for better performance
+   */
   async getChatMessages(chatId: string): Promise<Message[]> {
     return await chatRepository.findMessagesByChatId(chatId);
+  }
+
+  /**
+   * Get paginated messages for a chat
+   * Uses cursor-based pagination for efficient loading
+   */
+  async getChatMessagesPaginated(
+    chatId: string,
+    options?: PaginationOptions
+  ): Promise<PaginatedResult<Message>> {
+    return await chatRepository.findMessagesPaginated(chatId, options);
+  }
+
+  /**
+   * Load older messages (for infinite scroll)
+   */
+  async loadOlderMessages(
+    chatId: string,
+    beforeTimestamp: number,
+    limit?: number
+  ): Promise<PaginatedResult<Message>> {
+    return await chatRepository.findMessagesPaginated(chatId, {
+      limit: limit || 50,
+      beforeTimestamp,
+    });
   }
 
   async getChatParticipants(chatId: string): Promise<string[]> {
