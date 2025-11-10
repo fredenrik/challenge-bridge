@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { chatService } from '@/database/services';
+import { chatService } from '@/core/database/services';
 import { Chat, Message, MessageType } from '@/types/entities';
 
 export { Chat, Message };
@@ -20,7 +20,7 @@ export function useChats(currentUserId: string | null) {
         setLoading(false);
         return;
       }
-      
+
       try {
         const userChats = await chatService.getUserChats(currentUserId);
         setChats(userChats);
@@ -30,7 +30,7 @@ export function useChats(currentUserId: string | null) {
         setLoading(false);
       }
     };
-    
+
     loadChats();
   }, [currentUserId]);
 
@@ -38,14 +38,14 @@ export function useChats(currentUserId: string | null) {
     if (!currentUserId) {
       return null;
     }
-    
+
     try {
       const newChat = await chatService.createChat(participantIds, currentUserId);
-      
+
       if (newChat) {
         setChats(prevChats => [...prevChats, newChat]);
       }
-      
+
       return newChat;
     } catch (error) {
       console.error('Error creating chat:', error);
@@ -66,11 +66,11 @@ export function useChats(currentUserId: string | null) {
   ): Promise<boolean> => {
     try {
       const newMessage = await chatService.sendMessage(chatId, senderId, text, options);
-      
+
       if (!newMessage) {
         return false;
       }
-      
+
       // Update local state with optimistic UI update
       setChats(prevChats => {
         return prevChats.map(chat => {
@@ -84,7 +84,7 @@ export function useChats(currentUserId: string | null) {
           return chat;
         });
       });
-      
+
       return true;
     } catch (error) {
       console.error('Error sending message:', error);

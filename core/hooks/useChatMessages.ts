@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { chatService } from '@/database/services';
+import { chatService } from '@/core/database/services';
 import { Message } from '@/types/entities';
 
 interface UseChatMessagesResult {

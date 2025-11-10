@@ -11,8 +11,8 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useAuth, useUsers, useChatsContext } from '@/hooks/AppContext';
-import { useChatMessages } from '@/hooks/useChatMessages';
+import { useAuth, useUsers, useChatsContext } from '@/core/providers/AppContext';
+import { useChatMessages } from '@/core/hooks/useChatMessages';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { MessageBubble } from '@/components/MessageBubble';
@@ -45,7 +45,7 @@ export default function ChatRoomScreen() {
     if (messageText.trim() && currentUser && chatId) {
       const text = messageText.trim();
       setMessageText('');
-      
+
       const success = await sendMessage(chatId, text, currentUser.id);
       if (success) {
         // Optimistically add the message to the local state
@@ -71,7 +71,7 @@ export default function ChatRoomScreen() {
           thumbnailUri: thumbnailUri,
           mediaSize: size,
         });
-        
+
         if (success) {
           // Optimistically add the image message to local state
           const optimisticMessage = {

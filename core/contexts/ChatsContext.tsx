@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useChats, Chat } from '@/hooks/useChats';
+import { useChats, Chat } from '@/core/hooks/useChats';
 import { useAuth } from './AuthContext';
 import {MessageType} from '@/types/entities';
 

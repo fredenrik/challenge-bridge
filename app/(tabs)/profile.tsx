@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Pressable, SafeAreaView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '@/hooks/AppContext';
+import { useAuth } from '@/core/providers/AppContext';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Avatar } from '@/components/Avatar';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { resetDatabase } from '@/database/resetDatabase';
-import { seedDatabase } from '@/database/seed';
+import { resetDatabase } from '@/core/database/resetDatabase';
+import { seedDatabase } from '@/core/database/seed';
 
 export default function ProfileScreen() {
   const { currentUser, logout } = useAuth();
@@ -66,24 +66,24 @@ export default function ProfileScreen() {
             </ThemedText>
           </ThemedView>
         </ThemedView>
-        
+
         <ThemedView style={styles.section}>
           <ThemedText type="subtitle">Account Information</ThemedText>
-          
+
           <ThemedView style={styles.infoRow}>
             <ThemedText style={styles.infoLabel}>ID:</ThemedText>
             <ThemedText>{currentUser.id}</ThemedText>
           </ThemedView>
-          
+
           <ThemedView style={styles.infoRow}>
             <ThemedText style={styles.infoLabel}>Full Name:</ThemedText>
             <ThemedText>{currentUser.name}</ThemedText>
           </ThemedView>
         </ThemedView>
-        
+
         <ThemedView style={styles.buttonContainer}>
-          <Pressable 
-            style={styles.resetButton} 
+          <Pressable
+            style={styles.resetButton}
             onPress={handleResetDatabase}
             disabled={resetting}
           >
@@ -92,7 +92,7 @@ export default function ProfileScreen() {
               {resetting ? 'Resetting...' : 'Reset Database (Dev)'}
             </ThemedText>
           </Pressable>
-          
+
           <Pressable style={styles.logoutButton} onPress={handleLogout}>
             <IconSymbol name="arrow.right.square" size={20} color="#FFFFFF" />
             <ThemedText style={styles.logoutText}>Log Out</ThemedText>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, Pressable, Modal } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { Message } from '@/types/entities';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '@/core/hooks/useColorScheme';
 
 interface MessageBubbleProps {
   message: Message;
@@ -28,15 +28,15 @@ export function MessageBubble({ message, isCurrentUser }: MessageBubbleProps) {
     ]}>
       <View style={[
         styles.bubble,
-        isCurrentUser 
+        isCurrentUser
           ? [styles.selfBubble, { backgroundColor: isDark ? '#235A4A' : '#DCF8C6' }]
           : [styles.otherBubble, { backgroundColor: isDark ? '#2A2C33' : '#FFFFFF' }],
         isImageMessage && styles.imageBubble
       ]}>
         {isImageMessage && (
           <Pressable onPress={() => setShowFullImage(true)}>
-            <Image 
-              source={{ uri: message.thumbnailUri }} 
+            <Image
+              source={{ uri: message.thumbnailUri }}
               style={styles.thumbnail}
               resizeMode="cover"
             />
@@ -56,7 +56,7 @@ export function MessageBubble({ message, isCurrentUser }: MessageBubbleProps) {
           </ThemedText>
         </View>
       </View>
-      
+
       {/* Full-screen image modal */}
       {isImageMessage && message.mediaUri && (
         <Modal
@@ -64,12 +64,12 @@ export function MessageBubble({ message, isCurrentUser }: MessageBubbleProps) {
           transparent={true}
           onRequestClose={() => setShowFullImage(false)}
         >
-          <Pressable 
+          <Pressable
             style={styles.modalContainer}
             onPress={() => setShowFullImage(false)}
           >
-            <Image 
-              source={{ uri: message.mediaUri }} 
+            <Image
+              source={{ uri: message.mediaUri }}
               style={styles.fullImage}
               resizeMode="contain"
             />
